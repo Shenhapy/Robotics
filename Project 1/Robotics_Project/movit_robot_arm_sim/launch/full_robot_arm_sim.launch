@@ -1,0 +1,31 @@
+<launch>
+	<!-- Launch Your robot arms launch file which loads the robot in Gazebo and spawns the controllers -->
+	<include file = "$(find robot_arm_urdf)/launch/arm_urdf.launch" />
+
+	<!-- Launch Moveit Move Group Node -->
+	<include file = "$(find movit_robot_arm_sim)/launch/move_group.launch" />
+
+	<!-- Run Rviz and load the default configuration to see the state of the move_group node -->
+	<arg name="use_rviz" default="true" />
+	<include file="$(find movit_robot_arm_sim)/launch/moveit_rviz.launch" if="$(arg use_rviz)">
+		<arg name="rviz_config" value="$(find movit_robot_arm_sim)/launch/moveit.rviz"/>
+	</include>
+
+        <group ns="conveyor">
+		<node name="spawn_model_belt" pkg="gazebo_ros" type="spawn_model" args="-file $(find demo_world)/urdf/conveyor.urdf -urdf -model conveyor_belt " respawn="false" output="screen" />
+        </group>
+        
+        <node name="blue_box" pkg="gazebo_ros" type="spawn_model" args="-file $(find demo_world)/urdf/bluebox.urdf -urdf -model blue_box -x 0.5 -y -0.5 -z 0.6 " respawn="false" output="screen" />
+
+<node name="green_box" pkg="gazebo_ros" type="spawn_model" args="-file $(find demo_world)/urdf/greenbox.urdf -urdf -model green_box -x 0.5 -y 0.5 -z 0.6" respawn="false" output="screen" />
+
+<node name="red_box" pkg="gazebo_ros" type="spawn_model" args="-file $(find demo_world)/urdf/redbox.urdf -urdf -model red_box -x 1 -y 0.0 -z 0.6" respawn="false" output="screen" />
+
+	<node name="cube_spawner" pkg="demo_world" type="demo.py" output="screen"/>
+	<node name="move_to_point" pkg="movit_robot_arm_sim" type="move_to_point.py" output="screen"/>
+	
+	
+  <!-- Spawn the camera model -->
+  <node name="spawn_camera" pkg="gazebo_ros" type="spawn_model" args="-sdf -file $(find movit_robot_arm_sim)/models/cam.sdf -model camera_model -x -1.0 -y -.28 -z 1.28 -Y 0.0 -R 0.0 -P 1.5708"/>
+    
+</launch>

@@ -1,0 +1,5 @@
+<launch>
+
+ <node name="move_to_point" pkg="movit_robot_arm_sim" type="move_to_point.py" output="screen"/>
+
+</launch>
